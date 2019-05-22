@@ -26,7 +26,12 @@ commander
     console.log("table-names : " + commander.tableNames);
 
     getTablesFromMysql(commander.mysqlHost, commander.mysqlPort, commander.dbName, commander.mysqlUser,
-      commander.mysqlPassword, commander.mysqlCharset);
+      commander.mysqlPassword, commander.mysqlCharset)
+      .then(function (result) {
+        console.log('result ' + result);
+      }, function (err) {
+        console.error('error connecting: ' + err.stack);
+      })
   })
   .parse(process.argv);
 
