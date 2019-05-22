@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var commander = require('commander');
+var getTablesFromMysql = require('./tables-from-mysql');
 
 function commaSeparatedList(value, dummyPrevious) {
   return value.split(',');
@@ -24,6 +25,9 @@ commander
     console.log("mysql-port : " + commander.mysqlPort);
     console.log("table-names : " + commander.tableNames);
 
+    getTablesFromMysql(commander.mysqlHost, commander.mysqlPort, commander.dbName, commander.mysqlUser,
+      commander.mysqlPassword, commander.mysqlCharset);
   })
   .parse(process.argv);
+
 
