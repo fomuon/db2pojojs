@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var commander = require('commander');
-var getTablesFromMysql = require('./tables-from-mysql');
+var mysqltable = require('./mysqltable');
 
 function commaSeparatedList(value, dummyPrevious) {
   return value.split(',');
@@ -25,13 +25,14 @@ commander
     console.log("mysql-port : " + commander.mysqlPort);
     console.log("table-names : " + commander.tableNames);
 
-    getTablesFromMysql(commander.mysqlHost, commander.mysqlPort, commander.dbName, commander.mysqlUser,
+    mysqltable.getTablesFromMysql(commander.mysqlHost, commander.mysqlPort, commander.dbName, commander.mysqlUser,
       commander.mysqlPassword, commander.mysqlCharset)
-      .then(function (result) {
+      .then((result) => {
         console.log('result ' + result);
-      }, function (err) {
-        console.error('error connecting: ' + err.stack);
       })
+      .catch((err) => {
+        console.error('error connecting: ' + err.stack);
+      });
   })
   .parse(process.argv);
 
