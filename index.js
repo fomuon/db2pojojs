@@ -2,6 +2,7 @@
 
 var commander = require('commander');
 var mysqltable = require('./mysqltable');
+var pojo = require('./pojo');
 
 function commaSeparatedList(value, dummyPrevious) {
   return value.split(',');
@@ -24,11 +25,20 @@ commander
     console.log("mysql-host : " + commander.mysqlHost);
     console.log("mysql-port : " + commander.mysqlPort);
     console.log("table-names : " + commander.tableNames);
+    console.log("pojo-dir: " + commander.pojoDir);
+    console.log("pojo-package: " + commander.pojoPackage);
+    console.log("ddl-dir: " + commander.ddlDir);
+    console.log("dry: " + commander.dry);
 
     mysqltable.getTablesFromMysql(commander.mysqlHost, commander.mysqlPort, commander.dbName, commander.mysqlUser,
       commander.mysqlPassword, commander.mysqlCharset)
-      .then((result) => {
-        console.log('result ' + result);
+      .then((tables) => {
+        if (commander.pojoDir !== undefined) {
+          pojo.generatePojo(tables, commander.pojoDir, commander.pojoPackage, commander.dry);
+        }
+        if (commander.ddlDir !== undefined) {
+          pojo.generateDll(tables, commander.ddlDir, commander.dry);
+        }
       })
       .catch((err) => {
         console.error('error connecting: ' + err.stack);
